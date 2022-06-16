@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-extern char *number;
+extern int error;
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -41,19 +41,33 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-void readfile(char *myfile);
-char **validateBuffer(char *buffer, int pointer, FILE *montyF);
-void op_val(char **command, char *buffer, stack_t **list, int line, FILE *a);
-void f_opcode(char **command, char *buffer, int line, stack_t **list, FILE *m);
-int _memory(char *buffer);
-void op_push(stack_t **stack, unsigned int line_number);
-void op_pall(stack_t **stack, unsigned int line_number);
-void op_pint(stack_t **stack, unsigned int line_number);
-void op_pop(stack_t **stack, unsigned int line_number);
-void op_swap(stack_t **stack, unsigned int line_number);
-void op_add(stack_t **stack, unsigned int line_number);
-void op_nop(stack_t **stack, unsigned int line_number);
-void free_stack(stack_t **stack);
-void op_sub(stack_t **stack, unsigned int line_number);
+void _push(stack_t **stack, unsigned int line_number, char *str, int *mode);
+char *check_push_arg(char *token, unsigned int line_number);
+void treat_line(stack_t **head, FILE *fp, char *line,
+		unsigned int line_number, int *mode);
+void treat_token(stack_t **head, FILE *fp, char *line,
+		char *token, unsigned int line_number, int *mode);
+void (*get_function(char *token))(stack_t **, unsigned int);
+void get_invalid_opcode(char *token, unsigned int line_number);
+int is_number(char *str, unsigned int line_number);
+void get_usage_err(unsigned int line_number);
+void _pall(stack_t **head, unsigned int line_number);
+void _pint(stack_t **head, unsigned int line_number);
+void _pop(stack_t **head, unsigned int line_number);
+void _swap(stack_t **head, unsigned int line_number);
+void _add(stack_t **head, unsigned int line_number);
+void _nop(stack_t **head, unsigned int line_number);
+void _sub(stack_t **head, unsigned int line_number);
+void _div(stack_t **head, unsigned int line_number);
+void _mul(stack_t **head, unsigned int line_number);
+void _mod(stack_t **head, unsigned int line_number);
+void _pchar(stack_t **head, unsigned int line_number);
+void _pstr(stack_t **head, unsigned int line_number);
+void _rotl(stack_t **head, unsigned int line_number);
+void _rotr(stack_t **head, unsigned int line_number);
+void free_list(stack_t **head, FILE *fp, char *line);
+int check_mode(char *token, int *mode);
+void stack_push(stack_t **head, stack_t **new);
+void enqueue(stack_t **head, stack_t **new);
 
 #endif
